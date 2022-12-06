@@ -1,38 +1,37 @@
-const { createApp } = Vue
+const { createApp } = Vue;
 
-createApp({
+const app = createApp({
   data() {
     return {
-      emails:[],
-      temporaryEmails:[],
+      emails: [],
 
-    }
+    };
   },
-  metods: {
-    fetchEmail(){
+  methods: {
+    fetchEmail() {
+
       axios.get('https://flynn.boolean.careers/exercises/api/random/mail')
-      .then((resp)=>{
-        //function invocata automaticamente solo dopo che axios avrà ricevuto la risposta dal server
+        .then((resp) => {
 
-        console.log("l'email generata dal server è",resp.data);
-        this.temporaryEmails.push(resp.data.response);
-      });
-      
-}
-  },
-  mounted() {
-    while(this.temporaryEmails.length<10){
-      this.fetchEmail();
-      if(this.temporaryEmails.length===10){
-        this.emails=this.temporaryEmails;
+          //json di risposta
+          //console.log("JSON", resp.data);
+
+        console.log("email generata:",  resp.data.response);
+
+          const randomEmail = resp.data.response
+          //console.log(randomEmail);
+          this.emails.push(randomEmail);
+        });
+    },
+
+    fillArray(array,arrayLength){
+      for (let i = 0; i < arrayLength; i++) {
+        this.fetchEmail()
       }
     }
-
+  },
+  mounted() {
+    this.fillArray(this.emails,10);
+    
   }
-}).mount("#app")
-
-
-
-
-
-/*  https://flynn.boolean.careers/exercises/api/random/mail */
+}).mount('#app');
